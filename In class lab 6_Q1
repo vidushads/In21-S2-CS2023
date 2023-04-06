@@ -1,0 +1,88 @@
+#include <iostream>
+using namespace std;
+
+// define a class to create a stack
+class Stack {
+
+public:
+    int top = -1;
+    int size; // store the size of the stack
+    int* stack; // create a pointer to an array to implement a stack
+    Stack(int size); // constructor to initialize the stack with the given size
+    bool push(int x); //  function to insert an element to the stack
+    int pop(); // function to pop an element from the stack
+    int stackTop(); // function to return the element at the top of the stack
+    bool isFull(); // function to check if the stack is full
+    bool isEmpty(); // function to check if the stack is empty
+    void display(); // function to print the elements in the stack
+};
+
+Stack::Stack(int size) {
+    this->size = size;
+    top = -1;
+    stack = new int[size];
+}
+bool Stack::push(int x) {
+
+    //check if stack is full
+    if (isFull()) {
+        cout << "Stack Overflow";
+        return false;
+    }
+    else {
+        top++;
+        stack[top] = x;
+        return true;
+    }
+}
+
+int Stack::pop() {
+
+    //check if the stack is empty
+    if (isEmpty()) {
+        cout << "Stack Underflow\n";
+        return -1;
+    }
+    else {
+        int x = stack[top];
+        top--;
+        return x;
+    }
+}
+
+int Stack::stackTop(){
+    return stack[top];
+}
+
+bool Stack::isFull(){
+    if (top >= (size  - 1)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool Stack::isEmpty(){
+    if (top < 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+
+}
+
+void Stack::display() {
+    for (int i = 0; i <= top; i++) {
+        cout << stack[i] << " ";
+    }
+    cout << endl;
+}
+int main(){
+    int size;
+    cout << "Enter the size of the stack: ";
+    cin >> size;
+
+    Stack s(size);
+};
