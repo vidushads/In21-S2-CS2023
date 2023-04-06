@@ -1,0 +1,80 @@
+#include <iostream>
+using namespace std;
+
+// define a class to create nodes of the linked list
+class Node {
+
+public:
+    int val; // data to be placed in the node
+    Node* next; // declare the pointer to the next node
+};
+
+// define a class to represent a stack
+class Stack {
+
+private:
+    Node* top; // declare the pointer to the top of the stack
+
+public:
+    Stack() { top = NULL; } // constructor to initialize the stack
+    void push(int val); // function to add an element to the stack
+    int pop(); // function to pop an element from the stack
+    int stackTop(); // function to return the element at the top of the stack
+    bool isFull(); // function to check if the stack is full
+    bool isEmpty(); // function to check if the stack is empty
+    void display(); // function to print the elements in the stack
+};
+
+void Stack::push(int val) {
+
+    Node* newNode = new Node(); //initialize a new node
+    newNode->val = val;
+    newNode->next = top;
+    top = newNode;
+}
+
+int Stack::pop() {
+
+    if (isEmpty()) {
+        cout << "Stack is empty";
+        return -1;
+    }
+
+    int val = top->val;
+    Node* temp = top;
+    top = top->next;
+
+    delete temp;
+    return val;
+}
+
+int Stack::stackTop() {
+    if (isEmpty()) {
+        cout << "Stack is empty";
+        return -1;
+    }
+    return top->val;
+}
+
+bool Stack::isFull() {
+    Node* temp = new Node();
+    bool full = temp == NULL;
+    delete temp;
+    return full;
+}
+bool Stack::isEmpty() {
+    return top == NULL;
+}
+
+void Stack::display() {
+    Node* temp = top;
+    while (temp != NULL) {
+        cout << temp->val << " ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+int main(){
+    Stack s;
+}
