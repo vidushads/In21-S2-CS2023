@@ -1,0 +1,154 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+struct node {
+  int key;
+  struct node *left, *right;
+};
+
+// Inorder traversal
+void traverseInOrder(struct node *root) {
+    struct node *temp = root;
+    stack<node *> st;
+    while (temp != NULL || !st.empty()) {
+        if (temp != NULL) {
+            st.push(temp);
+            temp = temp->left;
+        } else {
+            temp = st.top();
+            st.pop();
+            cout << temp->key << " ";
+            temp = temp->right;
+        }
+    }
+}
+
+// Insert a node
+struct node *insertNode(struct node *node, int key) {
+    // Create a new node
+    struct node *newNode = new struct node;
+    newNode->key = key;
+    newNode->left = newNode->right = NULL;
+
+    // If the tree is empty, return the new node
+    if(!node){
+        newNode->key = key;
+        newNode->left = newNode->right = NULL;
+        return newNode;
+    }
+
+    // Find the correct position to insert the new node
+    struct node* prev = NULL;
+    struct node* temp = node;
+    while (temp) {
+        if (temp->key > key) {
+            prev = temp;
+            temp = temp->left;
+        }
+        else if (temp->key < key) {
+            prev = temp;
+            temp = temp->right;
+        }
+    }
+
+    // Insert the new node
+    if (prev->key > key)
+        prev->left = newNode;
+    else
+        prev->right = newNode;
+
+    return node;
+}
+
+// Function to delete a node from a binary search tree
+struct node *deleteNode(struct node *root, int key) {
+    // Base case: if the root is NULL, return the root
+    if (root == NULL)
+        return root;
+
+    // If the key to be deleted is smaller than the root's key,
+    // then it lies in the left subtree
+    if (root->key > key) {
+        root->left = deleteNode(root->left, key);
+        return root;
+    }
+    // If the key to be deleted is greater than the root's key,
+    // then it lies in the right subtree
+    else if (root->key < key) {
+        root->right = deleteNode(root->right, key);
+        return root;
+    }
+
+    // If the key is same as root's key, then this is the node
+    // to be deleted
+
+    // Case 1: Node with only one child or no child
+    if (root->left == NULL) {
+        node* temp = root->right;
+        delete root;
+        return temp;
+    }
+    else if (root->right == NULL) {
+        node* temp = root->left;
+        delete root;
+        return temp;
+    }
+
+    // Case 2: Node with two children: Get the inorder successor
+    // (smallest in the right subtree)
+    else {
+
+        node* nextParent = root;
+
+        // Find successor
+        node* next = root->right;
+        while (next->left != NULL) {
+            nextParent = next;
+            next = next->left;
+        }
+
+        // If the successor is not an immediate child of the root,
+        // update its parent's left child to its right child
+        if (nextParent != root)
+            nextParent->left = next->right;
+        else
+            nextParent->right = next->right;
+
+        // Copy Successor Data to root
+        root->key = next->key;
+
+        // Delete Successor and return root
+        delete next;
+        return root;
+    }
+}
+// Driver code
+int main() {
+  struct node *root = NULL;
+
+  int operation;
+  int operand;
+  cin >> operation;
+
+  while (operation != -1) {
+    switch(operation) {
+      case 1: // insert
+        cin >> operand;
+        root = insertNode(root, operand);
+        cin >> operation;
+        break;
+      case 2: // delete
+        cin >> operand;
+        root = deleteNode(root, operand);
+        cin >> operation;
+        break;
+      default:
+        cout << "Invalid Operator!\n";
+        return 0;
+    }
+  }
+  
+  traverseInOrder(root);
+}
