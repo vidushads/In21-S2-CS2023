@@ -1,0 +1,83 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define V 6
+
+// Function to print minimum time form the source city to reach other cities.
+void printTime(int time[], int x){
+    for(int i = 0; i < V; i++){
+        cout << "Time taken to reach " << i << " from source: " << time[i] << endl;
+    }
+}
+
+// Function to calculate the average time.
+void getAverage(int time[], int x){
+    double sum = 0.0;
+    for(int i = 0; i < V; i++){
+        sum = sum + time[i];
+    }
+    cout << "Average time to reach the cities form the source: " << sum/(V-1);
+
+}
+
+// Function to find the city with the minimum weight in the graph that is not already visited.
+int minTime(bool visited[], int time[])
+{
+    // Initialize variables
+    int min = INT_MAX;
+    int minIndex;
+
+    //
+    for (int i = 0; i < V; i++)
+        if (visited[i] == false && time[i] <= min){
+            min = time[i];
+            minIndex = i;
+        }
+    return minIndex;
+}
+
+// Function to implement dijkstra algorithm.
+void dijkstra(int graph[V][V], int src){
+
+    // Initialize variables
+    bool visited[V];
+    int time[V];
+
+    // Initialize vertices
+    for(int i = 0; i < V; i++){
+        time[i] = INT_MAX;
+        visited[i] = false;
+    }
+
+    // Time to reach source is zero.
+    time[src] = 0;
+
+    for(int j = 0; j < V; j++){
+
+        // Find the city with the minimum weights.
+        int k = minTime(visited, time);
+        visited[k] = true; // Note that k city is visited.
+
+        // Relaxation
+        for(int l = 0; l < V; l++){
+            if (!visited[l] && graph[k][l] && time[k] != INT_MAX
+                && time[k] + graph[k][l] < time[l])
+                time[l] = time[k] + graph[k][l];
+        }
+    }
+    printTime(time, V);
+    getAverage(time, V);
+}
+
+
+
+int main()
+{
+    // Adjacency matrix.
+    int graph[6][6] ={{0, 10, 0, 0, 15, 5}, {10, 0, 10, 30, 0 , 0}, {0, 10, 0, 12, 5, 0},
+                      {0, 30, 12, 0, 0, 20}, {15, 0, 5, 0, 0, 0}, {5, 0, 0, 20, 0 , 0 }};
+
+    dijkstra(graph, 0); // Begin with source 0
+
+    return 0;
+}
